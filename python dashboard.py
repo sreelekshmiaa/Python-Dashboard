@@ -59,7 +59,7 @@ app.layout = html.Div([
         dcc.Graph(id="marks_hist", style={"width": "48%", "display": "inline-block"})
     ]),
 
-    dcc.Graph(id="pass_fail_chart",style={"width": "48%", "margin": "auto"}),
+    dcc.Graph(id="pass_fail_chart", style={"width": "48%", "margin": "auto"}),
 
     html.Div([
         dcc.Graph(id="pass_gender_pie", style={"width": "48%", "display": "inline-block"}),
@@ -82,6 +82,7 @@ def upload_file(contents, filename):
         return "", None, []
 
     decoded = base64.b64decode(contents.split(",")[1])
+
     try:
         if filename.endswith(".csv"):
             df = pd.read_csv(io.StringIO(decoded.decode("utf-8")))
@@ -98,6 +99,7 @@ def upload_file(contents, filename):
         df["Total_Marks"] = df["Internal_1"] + df["Internal_2"] + df["External"]
 
         subjects = [{"label": s, "value": s} for s in sorted(df["Subject"].unique())]
+
         return f"✅ Uploaded: {filename}", df.to_json(orient="split"), subjects
 
     except Exception as e:
@@ -128,6 +130,18 @@ def update_dashboard(subject, stored_data):
 
     d["Result"] = d["Total_Marks"].apply(lambda x: "Pass" if x >= PASS_MARK else "Fail")
 
+    # ---------- MARK RANGES ----------
+    bins = [0, 20, 40, 60, 70, 80, 90, 100]
+    labels = ["0-20", "20-40", "40-60", "60-70", "70-80", "80-90", "90-100"]
+
+    d["Mark_Range"] = pd.cut(
+        d["Total_Marks"],
+        bins=bins,
+        labels=labels,
+        include_lowest=True
+    )
+
+    # ---------- KPI ----------
     total = len(d)
     boys = len(d[d["Gender"] == "Boy"])
     girls = len(d[d["Gender"] == "Girl"])
@@ -141,38 +155,66 @@ def update_dashboard(subject, stored_data):
 
     # ---------- COLORS ----------
     gender_colors = {"Boy": "#90D999", "Girl": "#F28E9C"}
-    chart_bg = "#FFF9ED"
-    paper_bg = "#FFF9ED"
+    mark_colors = {
+        "0-20": "#969CE4",
+        "20-40": "#C89DD6",
+        "40-60": "#A5C2DE",
+        "60-70": "#91D9A2",
+        "70-80": "#DFE486",
+        "80-90": "#E4A46F",
+        "90-100": "#FE7674"
+    }
+
+    bg = "#FFF9ED"
 
     # ---------- CHARTS ----------
-    pie = px.pie(d, names="Gender", title="Gender Distribution",
-                 color="Gender", color_discrete_map=gender_colors)
-    pie.update_layout(plot_bgcolor=chart_bg, paper_bgcolor=paper_bg)
-    pie.update_traces(textinfo="percent+label")
+    gender_pie = px.pie(
+        d, names="Gender", title="Gender Distribution",
+        color="Gender", color_discrete_map=gender_colors
+    )
+    gender_pie.update_layout(plot_bgcolor=bg, paper_bgcolor=bg)
+    gender_pie.update_traces(textinfo="percent+label")
 
-    hist = px.histogram(d, x="Total_Marks", title="Marks Distribution",
-                        color_discrete_sequence=["#90D999"])
-    hist.update_layout(plot_bgcolor=chart_bg, paper_bgcolor=paper_bg)
+    marks_hist = px.histogram(
+        d,
+        x="Mark_Range",
+        title="Marks Distribution (Range-wise)",
+        color="Mark_Range",
+        category_orders={"Mark_Range": labels},
+        color_discrete_map=mark_colors
+    )
+    marks_hist.update_layout(
+        plot_bgcolor=bg,
+        paper_bgcolor=bg,
+        xaxis_title="Marks Range",
+        yaxis_title="Number of Students"
+    )
 
     pf = d.groupby("Result").size().reset_index(name="Count")
-    pf_chart = px.bar(pf, x="Result", y="Count", color="Result",
-                      color_discrete_map={"Pass": "#F28E9C", "Fail": "#90D999"},
-                      title="Pass vs Fail")
-    pf_chart.update_layout(plot_bgcolor=chart_bg, paper_bgcolor=paper_bg)
+    pass_fail_chart = px.bar(
+        pf, x="Result", y="Count", color="Result",
+        color_discrete_map={"Pass": "#90D999", "Fail": "#F28E9C"},
+        title="Pass vs Fail"
+    )
+    pass_fail_chart.update_layout(plot_bgcolor=bg, paper_bgcolor=bg)
 
-    pass_pie = px.pie(d[d["Result"] == "Pass"], names="Gender", hole=0.4,
-                      title="Passed Students", color="Gender",
-                      color_discrete_map={"Boy": "#90D999", "Girl": "#F28E9C"})
-    pass_pie.update_layout(plot_bgcolor=chart_bg, paper_bgcolor=paper_bg)
+    pass_gender_pie = px.pie(
+        d[d["Result"] == "Pass"], names="Gender", hole=0.4,
+        title="Passed Students", color="Gender",
+        color_discrete_map=gender_colors
+    )
+    pass_gender_pie.update_layout(plot_bgcolor=bg, paper_bgcolor=bg)
 
-    fail_pie = px.pie(d[d["Result"] == "Fail"], names="Gender", hole=0.4,
-                      title="Failed Students", color="Gender",
-                      color_discrete_map={"Boy": "#90D999", "Girl": "#F28E9C"})
-    fail_pie.update_layout(plot_bgcolor=chart_bg, paper_bgcolor=paper_bg)
+    fail_gender_pie = px.pie(
+        d[d["Result"] == "Fail"], names="Gender", hole=0.4,
+        title="Failed Students", color="Gender",
+        color_discrete_map=gender_colors
+    )
+    fail_gender_pie.update_layout(plot_bgcolor=bg, paper_bgcolor=bg)
 
-    return kpis, pie, hist, pf_chart, pass_pie, fail_pie
+    return kpis, gender_pie, marks_hist, pass_fail_chart, pass_gender_pie, fail_gender_pie
 
 
 # ---------- RUN ----------
 if __name__ == "__main__":
-    app.run(port=8050, debug=True)
+    app.run(debug=True, port=8050)
