@@ -162,6 +162,7 @@ PASS_MARK = 50
 
 📸 Screenshots
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/bb609b90-e1ef-4950-aa8a-282626d92165" />
+
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/d1363851-6540-48ac-9144-b224336cc2e4" />
 
 
@@ -171,9 +172,13 @@ PASS_MARK = 50
 🧑‍💻 Author
 
 Sreelekshmi A A (https://github.com/sreelekshmiaa)
+
 Theertha Sunil (https://github.com/theerthasunil066-boop)
+
 Shivganga R T ()
+
 Course: BCA (Data Science & AI)
+
 Institution: Asian School of Business
 
 
