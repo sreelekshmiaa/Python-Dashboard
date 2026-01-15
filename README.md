@@ -53,7 +53,7 @@ A web-based interactive analytics dashboard built using Python, Dash, Plotly, an
 • Base64 / IO – File upload handling
 
 
-
+---
 
 📁 Project Structure
 
@@ -64,6 +64,8 @@ student-dashboard/
 ├── requirements.txt  # Python dependencies
 └── sample_data.xlsx  # (Optional) Sample dataset
 
+
+---
 
 
 📊 Required Dataset Format
@@ -80,6 +82,8 @@ Internal_2	             Internal exam 2 marks
 External	               External exam marks
 
 
+
+---
 
 
 ⚙️ Installation & Setup
@@ -107,6 +111,9 @@ Open your browser and go to:
 👉 http://127.0.0.1:8050/
 
 
+---
+
+
 
 
 🧠 How It Works
@@ -131,6 +138,8 @@ PASS_MARK = 50
 
 
 
+---
+
 
 🎯 Use Cases
 
@@ -141,6 +150,10 @@ PASS_MARK = 50
 • Faculty performance tracking
 
 • Student result visualization
+
+
+
+---
 
 
 
@@ -160,6 +173,11 @@ PASS_MARK = 50
 
 
 
+---
+
+
+
+
 📸 Screenshots
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/bb609b90-e1ef-4950-aa8a-282626d92165" />
 
@@ -167,6 +185,8 @@ PASS_MARK = 50
 
 
 
+
+---
 
 
 
@@ -183,6 +203,8 @@ Course: BCA (Data Science & AI)
 
 Institution: Asian School of Business
 
+
+---
 
 
 
