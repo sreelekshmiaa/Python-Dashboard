@@ -75,10 +75,15 @@ The uploaded file must contain the following columns:
 Column Name	             Description
 
 Course	                 Course name (e.g., BCA)
+
 Gender	                 Boy / Girl
+
 Subject	                 Subject name
+
 Internal_1	             Internal exam 1 marks
+
 Internal_2	             Internal exam 2 marks
+
 External	               External exam marks
 
 
@@ -197,7 +202,7 @@ Sreelekshmi A A (https://github.com/sreelekshmiaa)
 
 Theertha Sunil (https://github.com/theerthasunil066-boop)
 
-Shivganga R T ()
+Shivganga R T (https://github.com/shivgangart)
 
 Course: BCA (Data Science & AI)
 
